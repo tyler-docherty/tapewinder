@@ -3,7 +3,8 @@
 }
 
 .tapewinder-border {
-    border: 15px solid #111111;
+    border: 15px solid #242424;
+    background-color: #242424;
 }
 
 .text-center {
@@ -17,7 +18,7 @@
     margin: 5px 0;
 }
 
-.open_sans {
+.open-sans {
     font-family: 'Open Sans', sans-serif;
 }
 
