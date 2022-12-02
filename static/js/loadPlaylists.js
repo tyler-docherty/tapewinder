@@ -8,5 +8,3 @@ function getRandomPlaceholder() { // eslint-disable-line no-unused-vars
 	const fullPath = path.resolve(currentWorkingDirectory + randomImagePath);
 	return `${fullPath}`;
 }
-
-console.log(getRandomPlaceholder());
