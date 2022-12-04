@@ -11,7 +11,9 @@ module.exports = {
 	"overrides": [
 	],
 	"parserOptions": {
-		"ecmaVersion": "latest"
+		"ecmaVersion": "latest",
+		"sourceType": "module",
+		"allowImportExportEverywhere": true
 	},
 	"plugins": [
 		"react"
@@ -33,5 +35,6 @@ module.exports = {
 			"error",
 			"always"
 		]
-	}
+	},
+	"parser": "babel-eslint",
 };
