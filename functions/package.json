@@ -15,7 +15,7 @@
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.1.0",
     "helmet": "^6.0.1",
-    "node": "^16.18.1",
+    "node": "^19.2.0",
     "pug": "^3.0.2"
   },
   "devDependencies": {

@@ -25,12 +25,11 @@ app.use(
 	})
 )
 
-
 app.set("view engine", "pug");
 
 app.get("/", (req, res) => {
 	const indexPath = path.resolve("./index.pug");
-	res.render(indexPath, {rootPath: __dirname}); // eslint-disable-line no-undef
+	res.render(indexPath, {rootPath: __dirname});
 });
 
 exports.app = functions.https.onRequest(app);
