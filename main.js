@@ -9,10 +9,12 @@ app.use(helmet());
 app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
+			// allow bootstrap jsdelivr src
 			"script-src": ["'self'", "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"]
 		}
 	})
 )
+
 app.set("view engine", "pug");
 
 app.get("/", (req, res) => {

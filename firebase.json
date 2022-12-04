@@ -1,5 +1,9 @@
 {
   "hosting": {
+    "rewrites": [ {
+      "source": "**",
+      "function": "app"
+    }],
     "public": "static",
     "ignore": [
       "firebase.json",
@@ -13,7 +17,8 @@
   },
   "functions": [
     {
-      "source": "functions",
+      "runtime": "nodejs16",
+      "source": "/functions",
       "codebase": "default",
       "ignore": [
         "node_modules",
