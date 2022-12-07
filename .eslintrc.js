@@ -36,5 +36,5 @@ module.exports = {
 			"always"
 		]
 	},
-	"parser": "babel-eslint",
+	"parser": "@babel/eslint-parser",
 };

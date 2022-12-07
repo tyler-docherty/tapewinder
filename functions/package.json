@@ -1,6 +1,9 @@
 {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
+  "engines": {
+    "node": "14"
+  },
   "scripts": {
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
@@ -15,7 +18,7 @@
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.1.0",
     "helmet": "^6.0.1",
-    "node": "^19.2.0",
+    "node": "^14.21.0",
     "pug": "^3.0.2"
   },
   "devDependencies": {

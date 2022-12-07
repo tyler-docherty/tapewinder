@@ -3,6 +3,9 @@
   "version": "0.0.1-alpha",
   "description": "web frontend for tapewinder hosted with expressjs",
   "main": "main.js",
+  "engines": {
+    "node": "14"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +23,7 @@
     "firebase": "^9.14.0",
     "firebaseui": "^6.0.2",
     "helmet": "^6.0.1",
+    "node": "^19.2.0",
     "pug": "^3.0.2"
   }
 }
