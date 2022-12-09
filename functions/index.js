@@ -22,8 +22,4 @@ app.get("/", (req, res) => {
 	res.render(indexPath, {loggedOut: true});
 });
 
-app.use((req, res, next) => {
-	res.status(404).send("https://http.cat/404");
-});
-
 exports.app = functions.https.onRequest(app);
