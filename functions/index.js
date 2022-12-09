@@ -1,3 +1,4 @@
+require("dotenv").config();
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 const functions = require("firebase-functions");
@@ -6,7 +7,7 @@ const path = require("path");
 const helmet = require("helmet");
 const app = express();
 const firebaseConfig = {
-	apiKey: "AIzaSyD-HXvrngD1l8IrmAH1XXFRMj-Z6SzWcRg",
+	apiKey: process.env.apiKey,
 	authDomain: "tapewinder-node.firebaseapp.com",
 	projectId: "tapewinder-node",
 	storageBucket: "tapewinder-node.appspot.com",
