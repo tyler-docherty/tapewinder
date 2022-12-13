@@ -1,1 +1,1 @@
-import { Modal } from "bootstrap";
+import "bootstrap/js/dist/modal";
