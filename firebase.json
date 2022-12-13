@@ -3,7 +3,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "app"
+        "function": "exportApp"
       }
     ],
     "public": "static",

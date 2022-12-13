@@ -59,12 +59,10 @@ html(lang="en")
 						a(class="nav-link text-light" href="/") Home
 						//- conditional login
 						if loggedOut
-							a(class="nav-link text-light" id="loginstate" data-bs-toggle="modal" data-bs-target="#myModal" href="/")
+							a(class="nav-link text-light" data-bs-toggle="modal" data-bs-target="#myModal" href="/") Sign Up
 		div.white.container-flex.m-4
 			p(class="display-5 open-sans bold d-inline") My mixtapes
 			a(class="open-sans bold float-end d-inline white mt-3" href="/") See all:
 			//- clarifying that this creates a modal :)
 			+modal("myModal", "Sign in modal", "Sign in")
-	script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous")
-	script(src="/js/getUserState.js")
-	script(src="/js/firebaseComponents.js" type="module")
+	script(src="/js/bundle.js")

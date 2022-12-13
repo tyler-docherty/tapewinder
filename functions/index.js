@@ -1,10 +1,11 @@
-require("dotenv").config();
+import * as dotenv from "dotenv";
+dotenv.config();
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-const functions = require("firebase-functions");
-const express = require("express");
-const path = require("path");
-const helmet = require("helmet");
+import { getFirestore } from "firebase/firestore/lite";
+import { onRequest } from "firebase-functions/v1/https";
+import express from "express";
+import path from "path";
+import helmet from "helmet";
 const app = express();
 const firebaseConfig = {
 	apiKey: process.env.apiKey,
@@ -15,6 +16,7 @@ const firebaseConfig = {
 	appId: "1:850697091268:web:699e0eebd05279744cf191"
 };
 const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 app.use("/static/", express.static("static"));
 app.use(helmet());
@@ -35,4 +37,4 @@ app.get("/", (req, res) => {
 	res.render(indexPath, {loggedOut: true});
 });
 
-exports.app = functions.https.onRequest(app);
+export let exportApp = onRequest(app);
