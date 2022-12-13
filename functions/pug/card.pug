@@ -1,0 +1,8 @@
+mixin card(cardJSON)
+	div.container.text-center.mt-5 
+		div.row.gx-6 
+			div.col 
+				div.card.tapewinder-border.w-auto 
+					img(class="card-img-top" src=cards["cardImages"][cardIterable] alt=cards["cardAlts"][cardIterable])
+				div.card-body 
+					p(class="card-text open-sans") #{cards["cardText"][cardIterable]}

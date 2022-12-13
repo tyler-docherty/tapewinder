@@ -1,0 +1,27 @@
+mixin signupmodal(customModalID, customLabel, modalTitle)
+	div(class="modal fade" id=customModalID tabindex="-1" aria-labelledby=customLabel aria-hidden="true")
+		div.modal-dialog.open-sans.modal-lg
+			div.modal-content
+				div.modal-header
+					h1(class="modal-title fs-5 white" id=customLabel) #{modalTitle}
+					button(type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close")
+				form(action="/api/signup" method="post")
+					div.modal-body.open-sans
+							div.mb-3
+								label(for="signupEmail" class="form-label white") Email Address
+								input(type="email" class="form-control" id="signupEmail")
+							label(for="signupUser" class="form-label white") Username
+							div.input-group.mb-3
+								span(class="input-group-text") @
+								input(type="text" class="form-control" id="signupUsername")
+							div.mb-3
+								label(for="signupPassword" class="form-label white") Password
+								input(type="password" class="form-control" id="signupPassword")
+							div.mb-3 
+								label(for="signupConfirmPassword" class="form-label white") Confirm password 
+								input(type="password" class="form-control" id="signupConfirmPassword")
+							div.mb-3#signupErrors 
+								
+					div.modal-footer
+						button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close 
+						button(type="submit" class="btn btn-primary") Sign up

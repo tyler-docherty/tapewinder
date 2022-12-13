@@ -1,0 +1,12 @@
+doctype html 
+html(lang="en")
+	head 
+		include head.pug
+		+head("Tapewinder")
+	body
+		include nav.pug 
+		+nav()
+		div.white.container-flex.m-4
+			p(class="display-5 open-sans bold d-inline") My mixtapes
+			a(class="open-sans bold float-end d-inline white mt-3" href="/") See all:
+	script(src="/js/bundle.js")

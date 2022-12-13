@@ -1,5 +1,10 @@
+:root {
+    --tapewinder-black: #111111;
+    --tapewinder-body: #1B1B1B;
+}
+
 .tapewinder-black {
-    background-color: #111111;
+    background-color: var(--tapewinder-black);
 }
 
 .tapewinder-border {
@@ -35,5 +40,40 @@ a:hover {
 }
 
 body {
-    background-color: #1B1B1B;
+    background-color: var(--tapewinder-body);
+}
+
+/* bootstrap overrides */
+
+.modal {
+    --bs-border-color: #141414;
+}
+
+.modal-content {
+    background-color: var(--tapewinder-black);
+}
+
+.modal-body {
+    background-color: var(--tapewinder-body);
+}
+
+.form-control {
+    caret-color: white;
+    color: white;
+    background-color: var(--tapewinder-body);
+    border: 1px solid var(--bs-gray-800);
+}
+
+.form-control:focus {
+    color: white;
+    box-shadow: none;
+    border-color: white;
+    background-color: #222;
+    border: 1px solid var(--bs-gray-700)
+}
+
+.input-group-text {
+    background-color: var(--tapewinder-black);
+    border: 1px solid var(--bs-gray-800);
+    color: white;
 }

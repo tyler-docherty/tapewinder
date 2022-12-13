@@ -1,0 +1,16 @@
+mixin nav(loggedout)
+    nav.navbar.navbar-expand-lg.tapewinder-black
+        div.container-fluid
+            a(class="navbar-brand ms-3" href="/")
+                img(src="/tapewinder_draft3.png" alt="logo" width="200" href="/")
+            button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="View navigation options")
+                each _ in [1,1,1]
+                    div.hamburger
+            div.collapse.navbar-collapse.open-sans#navbarNavAltMarkup
+                div.navbar-nav 
+                    a(class="nav-link text-light" href="/") Home
+                    //- data-bs-target should equal signupform arg 1
+                    if loggedOut
+                        a(class="nav-link text-light" data-bs-toggle="modal" data-bs-target="#signUp" href="/") Sign Up
+                        include entry.pug
+                        +signupmodal("signUp", "Sign up modal", "Sign up")
