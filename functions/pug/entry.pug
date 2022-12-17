@@ -14,14 +14,17 @@ mixin signupmodal(customModalID, customLabel, modalTitle)
 							div.input-group.mb-3
 								span(class="input-group-text") @
 								input(type="text" class="form-control" id="signupUsername")
+								div.mt-2
+									p(class="h6 text-info") Your username must be at least 3-20 characters long and contain only alphanumeric characters
 							div.mb-3
 								label(for="signupPassword" class="form-label white") Password
 								input(type="password" class="form-control" id="signupPassword")
+								div.mt-2
+									p(class="h6 text-info") Your password must be at least 6-255 characters long, including an uppercase letter, a lowercase letter, a number and a symbol
 							div.mb-3 
 								label(for="signupConfirmPassword" class="form-label white") Confirm password 
 								input(type="password" class="form-control" id="signupConfirmPassword")
 							div.mb-3#signupErrors 
-								
 					div.modal-footer
 						button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close 
 						button(type="submit" class="btn btn-primary") Sign up
