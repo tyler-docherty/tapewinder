@@ -35,6 +35,10 @@
     color: white;
 }
 
+.noyellowbackdrop {
+    background-image: none !important;
+}
+
 a:hover {
     color: #ffffff80
 }
