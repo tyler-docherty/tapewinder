@@ -19,7 +19,7 @@
   },
   "functions": [
     {
-      "runtime": "nodejs16",
+      "runtime": "nodejs14",
       "source": "/functions",
       "codebase": "default",
       "ignore": [
