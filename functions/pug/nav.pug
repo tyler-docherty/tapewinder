@@ -11,5 +11,7 @@ mixin nav(loggedout)
                     a(class="nav-link text-light" href="/") Home
                     //- data-bs-target should equal signupform arg 1
                     a(class="nav-link text-light" data-bs-toggle="modal" data-bs-target="#signUp" href="/") Sign Up
+                    a(class="nav-link text-light" data-bs-toggle="modal" data-bs-target="#logIn" href="/") Log in
                     include entry.pug
                     +signupmodal("signUp", "Sign up modal", "Sign up")
+                    +loginmodal("logIn", "Log in modal", "Log in")

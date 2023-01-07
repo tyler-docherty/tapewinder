@@ -39,6 +39,10 @@
     background-image: none !important;
 }
 
+.inputfielddanger {
+    border: red 1px solid !important;
+}
+
 a:hover {
     color: #ffffff80
 }

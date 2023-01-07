@@ -2,14 +2,12 @@ const path = require("path");
 const nodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
-	entry: {
-		main: "./functions/js/landing.js"
-	},
+	entry: ["./functions/js/landing.js", "./functions/js/entry.js"],
 	mode: "development",
 	target: "web",
 	output: {
 		filename: "bundle.js",
-		path: path.resolve(__dirname, "static/js"),
+		path: path.resolve(__dirname, "static/js"), // eslint-disable-line
 	},
 	plugins: [
 		new nodePolyfillPlugin(),
@@ -19,4 +17,4 @@ module.exports = {
 		// 	filename: "index.pug"
 		// })
 	] 
-}
+};

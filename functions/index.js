@@ -1,12 +1,13 @@
+// IMPORTANT
+// USE NODE 14 BUT SPECIFY nodejs16 IN FIREBASE.JSON
+// CANNOT FIND ANY DOCUMENTED OCCURENCES OF THIS BUG
+// BUT ENDPOINTS WILL NOT BE SERVED OTHERWISE
 import * as dotenv from "dotenv";
 dotenv.config({path: "./GCPCREDENTIALS.env"});
-import * as functions from "firebase-functions";
-import admin from "firebase-admin";
-const { firestore } = admin;
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs  } from "firebase/firestore";
 import { onRequest } from "firebase-functions/v1/https";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { body, validationResult } from "express-validator";
 import express from "express";
 import path from "path";
@@ -30,10 +31,11 @@ app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
 			"script-src": ["'self'"],
+			"script-src-attr": ["'self'"],
 			"img-src": ["'self'"],
 			"font-src": ["*"],
 			"object-src": ["'self'"],
-			"default-src": ["'none'"]
+			"default-src": ["'self'"] // ["'none'"] DEPLOY THIS. NOT THAT!!!
 		}
 	})
 );
@@ -68,7 +70,7 @@ app.get("/failure/registration/insecure", (req, res) => {
 
 app.get("/failure/registration/email", (req, res) => {
 	const indexPath = path.resolve("./pug/failure.pug");
-	res.render(indexPath, {error: "An error occured. An account using this email address already exists in our database, please register using a different email address."})
+	res.render(indexPath, {error: "An error occured. An account using this email address already exists in our database, please register using a different email address."});
 });
 
 app.get("/success", (req, res) => {
@@ -95,70 +97,59 @@ app.post(
 			res.redirect("/failure/registration/insecure");
 			return;
 		}
-		const auth = getAuth(firebaseApp);
-		createUserWithEmailAndPassword(auth, req.body.signupEmail, req.body.signupPassword)
-			.then(async (userCredential) => {
-				const user = userCredential.user;
-				const username = "@" + req.body.signupUsername;
-				const defaultImg = "https://shr4pnel.com/img/tapewinder_profilepicture.jpg";
-				updateProfile(auth.currentUser, {
-					displayName: username,
-					photoURL: defaultImg
-				});
-				try {
-					const docRef = await addDoc(collection(db, "users", user.uid), {
-						email: req.body.signupEmail,
-						displayName: username,
-						photoURL: defaultImg
-					})
-						.catch((error) => {
-							console.error("document creation fucked lul");
-							console.error(error.code);
-							res.redirect("/failure/registration");
-						});
-				} catch(e) {
-					console.error(e);
-				}
-				// collection("users").add({
-				// 	email: req.body.signupEmail,
-				// 	displayName: username,
-				// 	photoURL: defaultImg
-				// }).catch(() => {
-				// 	console.error("username taken bozo!");
-				// 	res.redirect("/failure/registration");
-				// 	return;
-				//});
-				sendEmailVerification(auth.currentUser);
-				res.redirect(`/success?user=${encodeURI(username)}`);
-				return;
-			})
-			.catch((error) => {
-				console.log("i am in the final catch block");
-				console.error(error);
-				switch (error.code) {
-				case "auth/email-already-in-use":
-					res.redirect("/failure/registration/email");
-					break;
-				default:
-					res.redirect("/failure/registration");
-				}
-				return;
-			});
+		
+		// this code has been LEGACIED
+		// i am rewriting this to better understand it
+		// in the meantime this project is still prealpha
+		
+		// const auth = getAuth(firebaseApp);
+		//createUserWithEmailAndPassword(auth, req.body.signupEmail, req.body.signupPassword)
+		//	.then(async (userCredential) => {
+		//		const user = userCredential.user;
+		//		const username = "@" + req.body.signupUsername;
+		//		const defaultImg = "https://shr4pnel.com/img/tapewinder_profilepicture.jpg";
+		//		updateProfile(auth.currentUser, {
+		//			displayName: username,
+		//			photoURL: defaultImg
+		//		});
+		//		try {
+		//			const docRef = await addDoc(collection(db, "users", user.uid), { // eslint-disable-line
+		//				email: req.body.signupEmail,
+		//				displayName: username,
+		//				photoURL: defaultImg
+		//			})
+		//				.catch((error) => {
+		//					console.error("document creation fucked lul");
+		//					console.error(error.code);
+		//					res.redirect("/failure/registration");
+		//				});
+		//		} catch(e) {
+		//			console.error(e);
+		//		}
+		//		return;
+		//	})
+		//	.catch((error) => {
+		//		console.log("i am in the final catch block");
+		//		console.error(error);
+		//		switch (error.code) {
+		//		case "auth/email-already-in-use":
+		//			res.redirect("/failure/registration/email");
+		//			break;
+		//		default:
+		//			console.error("i failed in the switch default!!");
+		//			res.redirect("/failure/registration");
+		//		}
+		//		return;
+		//	});
 	});
+
+app.post("/api/usernameUnique", async (req, res) => {
+	const username = req.body.username;
+	const q = query(collection(db, "users"), where("displayName", "==", username));
+	const querySnapshot = await getDocs(q);
+	// if no other matching usernames, the username is unique. returns this
+	const response = querySnapshot.empty ? {unique: true} : {unique: false};
+	res.send(JSON.stringify(response));
+});
 
 export const exportApp = onRequest(app);
-
-export const enforceUniqueUsername = functions.firestore
-	.document("users/{userID}")
-	.onWrite(async (change) => {
-		console.log("enforceUniqueUsername has fired!");
-		const data = change.after.data();
-		const snapshot = await firestore()
-			.collection("users")
-			.where("displayName", "==", data.displayName)
-			.get();
-		if (snapshot.size > 0) {
-			return change.after.ref.set(null, {merge: true});
-		}
-		return null;
-	});

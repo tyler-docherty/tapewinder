@@ -1,30 +1,49 @@
 mixin signupmodal(customModalID, customLabel, modalTitle)
-	div(class="modal fade" id=customModalID tabindex="-1" aria-labelledby=customLabel aria-hidden="true")
-		div.modal-dialog.open-sans.modal-lg
-			div.modal-content
-				div.modal-header
-					h1(class="modal-title fs-5 white" id=customLabel) #{modalTitle}
-					button(type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close")
-				form(action="/api/signup" method="post" enctype="application/x-www-form-urlencoded")
-					div.modal-body.open-sans
-							div.mb-3
-								label(for="signupEmail" class="form-label white") Email Address
-								input(type="email" class="form-control noyellowbackdrop" id="signupEmail" name="signupEmail" required)
-							label(for="signupUser" class="form-label white") Username
-							div.input-group.mb-3
-								span(class="input-group-text") @
-								input(type="text" class="form-control noyellowbackdrop" id="signupUsername" name="signupUsername" required)
-								div.mt-2
-									p(class="h6 text-info") Your username must be at least 3-20 characters long and contain only alphanumeric characters
-							div.mb-3
-								label(for="signupPassword" class="form-label white") Password
-								input(type="password" class="form-control noyellowbackdrop" id="signupPassword" name="signupPassword" required)
-								div.mt-2
-									p(class="h6 text-info") Your password must be at least 8-255 characters long, including an uppercase letter, a lowercase letter, a number and a symbol
-							div.mb-3 
-								label(for="signupConfirmPassword" class="form-label white") Confirm password 
-								input(type="password" class="form-control noyellowbackdrop" id="signupConfirmPassword" name="signupConfirmPassword" required)
-							div.mb-3#signupErrors 
-					div.modal-footer
-						button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close 
-						button(type="submit" class="btn btn-primary") Sign up
+    div(class="modal fade" id=customModalID tabindex="-1" aria-labelledby=customLabel aria-hidden="true")
+        div.modal-dialog.open-sans.modal-lg
+            div.modal-content
+                div.modal-header
+                    h1(class="modal-title fs-5 white" id=customLabel) #{modalTitle}
+                    button(type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close")
+                form(action="/api/signup" id="signupForm" method="post" enctype="application/x-www-form-urlencoded")
+                    div.modal-body.open-sans
+                            div.mb-3
+                                label(for="signupEmail" class="form-label white") Email Address
+                                input(type="email" class="form-control noyellowbackdrop" id="signupEmail" name="signupEmail" required)
+                            label(for="signupUser" class="form-label white") Username
+                            div.input-group.mb-3
+                                span(class="input-group-text" id="signupUsernameSpan") @
+                                input(type="text" class="form-control noyellowbackdrop" id="signupUsername" name="signupUsername" required)
+                                div.mt-2
+                                    p(class="h6 text-info") Your username must be at least 3-20 characters long and contain only alphanumeric characters
+                            div.mb-3
+                                label(for="signupPassword" class="form-label white") Password
+                                input(type="password" class="form-control noyellowbackdrop" id="signupPassword" name="signupPassword" required)
+                                div.mt-2
+                                    p(class="h6 text-info") Your password must be at least 8-255 characters long, including an uppercase letter, a lowercase letter, a number and a symbol
+                            div.mb-3 
+                                label(for="signupConfirmPassword" class="form-label white") Confirm password 
+                                input(type="password" class="form-control noyellowbackdrop" id="signupConfirmPassword" name="signupConfirmPassword" required)
+                            div.mb-3#signupErrors 
+                    div.modal-footer
+                        button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close 
+                        button(type="submit" class="btn btn-primary") Sign up
+
+mixin loginmodal(customModalID, customLabel, modalTitle)
+    div(class="modal fade" id=customModalID tabindex="-1" aria-labelledby=customLabel aria-hidden="true")
+        div.modal-dialog.open-sans.modal-lg 
+            div.modal-content 
+                div.modal-header 
+                    h1(class="modal-title fs-5 white" id=customLabel) #{modalTitle}
+                    button(type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="close")
+                form(action="/api/login" id="loginForm" method="post" enctype="application/x-www-form-urlencoded")
+                    div.modal-body.open-sans 
+                        div.mb-3 
+                            label(for="loginEmail" class="form-label white") Email 
+                            input(type="email" class="form-control noyellowbackdrop" id="loginEmail")
+                        div.mb-3 
+                            label(for="loginPassword" class="form-label white") Password
+                            input(type="password" class="form-control noyellowbackdrop" id="loginPassword") 
+                    div.modal-footer 
+                        button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close 
+                        button(type="submit" class="btn btn-primary") Sign up
