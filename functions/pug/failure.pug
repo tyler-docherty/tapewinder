@@ -1,0 +1,14 @@
+doctype html 
+html(lang="en")
+    head 
+        include head.pug
+        +head("Tapewinder - Login")
+    body 
+        include nav.pug 
+        +nav(true)
+        div.container
+            div.d-flex.justify-content-center.mt-4
+                img(src="/img/tapewinder_failure.png" alt="failure icon" width=350)
+            div.d-flex.justify-content-center.mt-4
+                h4(class="open-sans white") Sorry! #{error}
+    script(src="/js/bundle.js")
