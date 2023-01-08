@@ -1,8 +1,8 @@
-mixin card(cardJSON)
-	div.container.text-center.mt-5 
-		div.row.gx-6 
-			div.col 
-				div.card.tapewinder-border.w-auto 
-					img(class="card-img-top" src=cards["cardImages"][cardIterable] alt=cards["cardAlts"][cardIterable])
+mixin cardPlaceholder()
+	div.row.row-cols-1.row-cols-md-2.g-4 
+		div.col 
+			div.card.tapewinder-border
+				img(src="/img/tapewinder_placeholder.png" alt="placeholder" class="card-img-top") 
 				div.card-body 
-					p(class="card-text open-sans") #{cards["cardText"][cardIterable]}
+					p(class="card-text white open-sans") Create mixtapes to see them appear on your homepage. 
+	

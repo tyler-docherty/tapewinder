@@ -7,7 +7,7 @@ dotenv.config({path: "./GCPCREDENTIALS.env"});
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs  } from "firebase/firestore";
 import { onRequest } from "firebase-functions/v1/https";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { body, validationResult } from "express-validator";
 import express from "express";
 import path from "path";
@@ -97,59 +97,52 @@ app.post(
 			res.redirect("/failure/registration/insecure");
 			return;
 		}
-		
-		// this code has been LEGACIED
-		// i am rewriting this to better understand it
-		// in the meantime this project is still prealpha
-		
-		// const auth = getAuth(firebaseApp);
-		//createUserWithEmailAndPassword(auth, req.body.signupEmail, req.body.signupPassword)
-		//	.then(async (userCredential) => {
-		//		const user = userCredential.user;
-		//		const username = "@" + req.body.signupUsername;
-		//		const defaultImg = "https://shr4pnel.com/img/tapewinder_profilepicture.jpg";
-		//		updateProfile(auth.currentUser, {
-		//			displayName: username,
-		//			photoURL: defaultImg
-		//		});
-		//		try {
-		//			const docRef = await addDoc(collection(db, "users", user.uid), { // eslint-disable-line
-		//				email: req.body.signupEmail,
-		//				displayName: username,
-		//				photoURL: defaultImg
-		//			})
-		//				.catch((error) => {
-		//					console.error("document creation fucked lul");
-		//					console.error(error.code);
-		//					res.redirect("/failure/registration");
-		//				});
-		//		} catch(e) {
-		//			console.error(e);
-		//		}
-		//		return;
-		//	})
-		//	.catch((error) => {
-		//		console.log("i am in the final catch block");
-		//		console.error(error);
-		//		switch (error.code) {
-		//		case "auth/email-already-in-use":
-		//			res.redirect("/failure/registration/email");
-		//			break;
-		//		default:
-		//			console.error("i failed in the switch default!!");
-		//			res.redirect("/failure/registration");
-		//		}
-		//		return;
-		//	});
+		const auth = getAuth();
+		const username = `@${req.body.signupUsername}`;
+		createUserWithEmailAndPassword(auth, req.body.signupEmail, req.body.signupPassword)
+			.then((userCredential) => {
+				updateProfile(userCredential, {
+					displayName: username,
+					photoURL: "https://shr4pnel.com/img/tapewinder_profilepicture.jpg"
+				})
+					.then(() => {
+						console.log(`SUCCESS - Account created with credentials\nemail: ${req.body.email}\nusername: ${username}`);
+					})
+					.catch((err) => {
+						console.error("ERROR - updateProfile():");
+						console.error(err.code);
+						console.error(err.message);
+					});
+			})
+			.catch((err) => {
+				console.error("ERROR - createUserWithEmailAndPassword():");
+				console.error(err.code);
+				console.error(err.message);
+			});
 	});
 
-app.post("/api/usernameUnique", async (req, res) => {
+app.post("/api/isUnique", async (req, res) => {
+	// username database query
+	const response = {};
 	const username = req.body.username;
-	const q = query(collection(db, "users"), where("displayName", "==", username));
-	const querySnapshot = await getDocs(q);
+	const email = req.body.email;
+	const usernameQuery = query(collection(db, "users"), where("displayName", "==", username));
+	const usernameQuerySnapshot = await getDocs(usernameQuery);
 	// if no other matching usernames, the username is unique. returns this
-	const response = querySnapshot.empty ? {unique: true} : {unique: false};
+	response["usernameUnique"] = usernameQuerySnapshot.empty;
+	// email database query
+	const emailQuery = query(collection(db, "users"), where("email", "==", email));
+	const emailQuerySnapshot = await getDocs(emailQuery);
+	response["emailUnique"] = emailQuerySnapshot.empty;
 	res.send(JSON.stringify(response));
+});
+
+app.post("/api/userHasMixtapes", (req, res) => {
+	const auth = getAuth();
+	if (auth.currentUser === null) {
+		res.send(JSON.stringify({userHasMixtapes: false, mixtapeCount: 0}));
+	}
+	res.send(JSON.stringify({userHasMixtapes: true, mixtapeCount: undefined}));
 });
 
 export const exportApp = onRequest(app);
