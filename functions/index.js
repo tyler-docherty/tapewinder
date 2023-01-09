@@ -5,9 +5,9 @@
 import * as dotenv from "dotenv";
 dotenv.config({path: "./GCPCREDENTIALS.env"});
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs  } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { onRequest } from "firebase-functions/v1/https";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "firebase/auth";
 import { body, validationResult } from "express-validator";
 import express from "express";
 import path from "path";
@@ -23,19 +23,31 @@ const firebaseConfig = {
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-app.use("/static/", express.static("static"));
-app.use(helmet());
+app.use("/static/", express.static("static"), (req, res, next) => {
+	res.set("Cross-Origin-Resource-Policy", "cross-origin");
+	next();
+});
+app.use(helmet({
+	crossOriginEmbedderPolicy: false
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(helmet.permittedCrossDomainPolicies());
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "*");
+	next();
+});
 app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
 			"script-src": ["'self'"],
 			"script-src-attr": ["'self'"],
-			"img-src": ["'self'"],
+			"img-src": ["'self'", "data:", "https://shr4pnel.com"],
 			"font-src": ["*"],
 			"object-src": ["'self'"],
-			"default-src": ["'self'"] // ["'none'"] DEPLOY THIS. NOT THAT!!!
+			"connect-src": ["'self'", "https://shr4pnel.com"],
+			"default-src": ["'self'", "https://shr4pnel.com"] // ["'none'"] DEPLOY THIS. NOT THAT!!!
 		}
 	})
 );
@@ -43,14 +55,19 @@ app.set("view engine", "pug");
 
 app.get("/", (req, res) => {
 	const auth = getAuth();
-	const user = auth.currentUser;
-	if (user) {
-		const indexPath = path.resolve("./pug/landing.pug");
-		res.render(indexPath);
-	} else {
-		const indexPath = path.resolve("./pug/landing.pug");
-		res.render(indexPath);
-	}
+	onAuthStateChanged(auth, async (user) => {
+		if (user) {
+			await getDoc(doc(db, "users", user.uid))
+				.then((document) => {
+					const userData = document.data();
+					const indexPath = path.resolve("./pug/signedin.pug");
+					res.render(indexPath, {"photoURL": userData.photoURL, "username": userData.displayName});
+				});
+		} else {
+			const indexPath = path.resolve("./pug/landing.pug");
+			res.render(indexPath);
+		}
+	});
 });
 
 app.get("/failure/password", (req, res) => {
@@ -76,9 +93,23 @@ app.get("/failure/registration/email", (req, res) => {
 app.get("/success", (req, res) => {
 	const indexPath = path.resolve("./pug/success.pug");
 	const auth = getAuth();
-	const user = auth.currentUser;
-	const username = user ? user.displayName : undefined;
-	res.render(indexPath, {username: username});
+	onAuthStateChanged(auth, (user) => {
+		const username = user ? user.displayName : undefined;
+		console.log(username);
+		res.render(indexPath, {username: username});
+	});
+});
+
+app.get("/api/signout", (req, res) => {
+	const auth = getAuth();
+	signOut(auth)
+		.then(() => {
+			res.redirect("/");
+		})
+		.catch((err) => {
+			console.error("signout failed. HOW? :(");
+			console.error(err);
+		});
 });
 
 app.post(
@@ -100,18 +131,18 @@ app.post(
 		const auth = getAuth();
 		const username = `@${req.body.signupUsername}`;
 		createUserWithEmailAndPassword(auth, req.body.signupEmail, req.body.signupPassword)
-			.then((userCredential) => {
-				updateProfile(userCredential, {
+			.then(async (credential) => {
+				await setDoc(doc(db, "users", credential.user.uid), {
 					displayName: username,
+					email: req.body.signupEmail,
 					photoURL: "https://shr4pnel.com/img/tapewinder_profilepicture.jpg"
 				})
 					.then(() => {
-						console.log(`SUCCESS - Account created with credentials\nemail: ${req.body.email}\nusername: ${username}`);
+						res.redirect("/success");
 					})
 					.catch((err) => {
-						console.error("ERROR - updateProfile():");
-						console.error(err.code);
-						console.error(err.message);
+						console.error("setdoc - err");
+						console.error(err);
 					});
 			})
 			.catch((err) => {
@@ -120,6 +151,27 @@ app.post(
 				console.error(err.message);
 			});
 	});
+
+app.post("/api/login", (req, res) => {
+	const email = req.body.loginEmail;
+	const password = req.body.loginPassword;
+	const auth = getAuth();
+	setPersistence(auth, browserLocalPersistence)
+		.then(async () => {
+			await signInWithEmailAndPassword(auth, email, password)
+				.then(() => {
+					res.redirect("/");
+				})
+				.catch((err) => {
+					console.error("api/login err");
+					console.error(err);
+				});
+		})
+		.catch((err) => {
+			console.error("ERROR API/LOGIN");
+			console.error(err);
+		});
+});
 
 app.post("/api/isUnique", async (req, res) => {
 	// username database query

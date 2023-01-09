@@ -47,6 +47,17 @@
     border: red 1px solid !important;
 }
 
+.profilepicture {
+    width: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.rightalign {
+    position: absolute;
+    right: 0px;
+}
+
 a:hover {
     color: #ffffff80
 }

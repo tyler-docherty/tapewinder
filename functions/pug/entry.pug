@@ -40,10 +40,10 @@ mixin loginmodal(customModalID, customLabel, modalTitle)
                     div.modal-body.open-sans 
                         div.mb-4
                             label(for="loginEmail" class="form-label white") Email 
-                            input(type="email" class="form-control noyellowbackdrop" id="loginEmail")
+                            input(type="email" class="form-control noyellowbackdrop" id="loginEmail" name="loginEmail" required)
                         div.mb-4 
                             label(for="loginPassword" class="form-label white") Password
-                            input(type="password" class="form-control noyellowbackdrop" id="loginPassword") 
+                            input(type="password" class="form-control noyellowbackdrop" id="loginPassword" name="loginPassword" required) 
                     div.modal-footer 
                         button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close 
                         button(type="submit" class="btn btn-primary") Log in
