@@ -1,17 +1,26 @@
 mixin nav(loggedout)
-    nav.navbar.navbar-expand-lg.tapewinder-black
-        div.container-fluid
-            a(class="navbar-brand ms-3" href="/")
-                img(src="/img/tapewinder_draft3.png" alt="logo" width="200" href="/")
-            button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="View navigation options")
-                each _ in [1,1,1]
-                    div.hamburger
-            div.collapse.navbar-collapse.open-sans#navbarNavAltMarkup
-                div.navbar-nav 
-                    a(class="nav-link text-light" href="/") Home
-                    //- data-bs-target should equal signupform arg 1
+    nav.navbar.navbar-expand-md.tapewinder-black
+        a(class="navbar-brand ms-3" href="/")
+            img(src="/img/tapewinder_draft3.png" alt="logo" width="200" href="/")
+        button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="View navigation options")
+            each _ in [1,1,1]
+                div.hamburger
+        div.collapse.navbar-collapse.open-sans#navbarNavAltMarkup
+            div.navbar-nav.align-items-center
+                a(class="nav-link text-light" href="/") Home
+                //- data-bs-target should equal signupform arg 1
+                if loggedout
                     a(class="nav-link text-light" data-bs-toggle="modal" data-bs-target="#signUp" href="/") Sign Up
                     a(class="nav-link text-light" data-bs-toggle="modal" data-bs-target="#logIn" href="/") Log in
                     include entry.pug
                     +signupmodal("signUp", "Sign up modal", "Sign up")
                     +loginmodal("logIn", "Log in modal", "Log in")
+                else 
+                    a(class="nav-link text-light" href="/api/signout") Sign out
+                    div.navbar-nav.rightalign
+                        div.nav-item.dropdown
+                            a(class="nav-link dropdown-toggle white" href="#" data-bs-toggle="dropdown")
+                                img(src=photoURL alt="profile picture" class="profilepicture mx-1")
+                                span(class="open-sans white mx-1") #{username}
+                            div.dropdown-menu 
+                                a(href="https://google.com") hello!

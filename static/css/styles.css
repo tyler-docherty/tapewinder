@@ -12,6 +12,10 @@
     background-color: #242424;
 }
 
+.tapewinder-border-color {
+    background-color: #242424;
+}
+
 .text-center {
     text-align: center;
 }
@@ -41,6 +45,17 @@
 
 .inputfielddanger {
     border: red 1px solid !important;
+}
+
+.profilepicture {
+    width: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.rightalign {
+    position: absolute;
+    right: 0px;
 }
 
 a:hover {

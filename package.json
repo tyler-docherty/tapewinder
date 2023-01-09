@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "webpack",
-    "buildprod": "webpack --mode=production"
+    "buildprod": "webpack --mode=production",
+    "builddebug": "webpack --mode=none"
   },
   "author": "Tyler J. Docherty",
   "license": "GPL-3.0-or-later",
