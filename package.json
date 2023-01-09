@@ -14,16 +14,29 @@
   "author": "Tyler J. Docherty",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "autoprefixer": "^10.4.13",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^9.1.2",
+    "babel-runtime": "^6.26.0",
+    "css-loader": "^6.7.3",
     "eslint": "^8.28.0",
     "eslint-plugin-react": "^7.31.11",
     "express": "^4.18.2",
+    "extract-loader": "^5.1.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.7.2",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "postcss-loader": "^7.0.2",
+    "sass-loader": "^13.2.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.0",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "@material/button": "^14.0.0",
+    "@material/ripple": "^14.0.0",
     "@popperjs/core": "^2.11.6",
     "body-parser": "^1.20.1",
     "bootstrap": "^5.2.3",
@@ -35,7 +48,9 @@
     "helmet": "^6.0.1",
     "html-webpack-plugin": "^5.5.0",
     "html-webpack-pug-plugin": "^4.0.0",
+    "material-components-web": "^14.0.0",
     "node": "^19.2.0",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "sass": "^1.57.1"
   }
 }
