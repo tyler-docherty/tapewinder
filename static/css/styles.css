@@ -53,9 +53,11 @@
     border: 2px solid white;
 }
 
-.rightalign {
-    position: absolute;
-    right: 0px;
+@media only screen and (min-width: 768px) { /* desktop: right align user*/
+    .rightalign {
+        position: absolute;
+        right: 0px;
+    }
 }
 
 a:hover {

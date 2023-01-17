@@ -2,7 +2,7 @@ mixin nav(loggedout)
     nav.navbar.navbar-expand-md.tapewinder-black
         a(class="navbar-brand ms-3" href="/")
             img(src="/img/tapewinder_draft3.png" alt="logo" width="200" href="/")
-        button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="View navigation options")
+        button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="View navigation options" id="navToggler")
             each _ in [1,1,1]
                 div.hamburger
         div.collapse.navbar-collapse.open-sans#navbarNavAltMarkup
@@ -17,7 +17,7 @@ mixin nav(loggedout)
                     +loginmodal("logIn", "Log in modal", "Log in")
                 else 
                     a(class="nav-link text-light" href="/api/signout") Sign out
-                    div.navbar-nav.rightalign
+                    div.navbar-nav.rightalign#usernameInNav
                         div.nav-item.dropdown
                             a(class="nav-link dropdown-toggle white" href="#" data-bs-toggle="dropdown")
                                 img(src=photoURL alt="profile picture" class="profilepicture mx-1")
