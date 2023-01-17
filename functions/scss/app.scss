@@ -1,6 +1,2 @@
-@use "@material/button/mdc-button";
-@use "@material/button";
-
-.foo-button {
-    @include button.container-fill-color(white);
-}
+@use "@material/icon-button";
+@use "@material/top-app-bar/mdc-top-app-bar";

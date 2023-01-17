@@ -2,6 +2,7 @@
 // USE NODE 14 BUT SPECIFY nodejs16 IN FIREBASE.JSON
 // CANNOT FIND ANY DOCUMENTED OCCURENCES OF THIS BUG
 // BUT ENDPOINTS WILL NOT BE SERVED OTHERWISE
+// todo fix firebase persistence
 import * as dotenv from "dotenv";
 dotenv.config({path: "./GCPCREDENTIALS.env"});
 import { initializeApp } from "firebase/app";
@@ -23,21 +24,13 @@ const firebaseConfig = {
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-app.use("/static/", express.static("static"), (req, res, next) => {
-	res.set("Cross-Origin-Resource-Policy", "cross-origin");
-	next();
-});
+app.use("/static/", express.static("static"));
 app.use(helmet({
 	crossOriginEmbedderPolicy: false
 }));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(helmet.permittedCrossDomainPolicies());
-app.use((req, res, next) => {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "*");
-	next();
-});
 app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
@@ -55,13 +48,17 @@ app.set("view engine", "pug");
 
 app.get("/", (req, res) => {
 	const auth = getAuth();
-	onAuthStateChanged(auth, async (user) => {
+	onAuthStateChanged(auth, (user) => {
 		if (user) {
-			await getDoc(doc(db, "users", user.uid))
+			getDoc(doc(db, "users", user.uid))
 				.then((document) => {
 					const userData = document.data();
 					const indexPath = path.resolve("./pug/signedin.pug");
 					res.render(indexPath, {"photoURL": userData.photoURL, "username": userData.displayName});
+				})
+				.catch((err) => {
+					console.error("error - getdoc index");
+					console.error(err);
 				});
 		} else {
 			const indexPath = path.resolve("./pug/landing.pug");
@@ -104,7 +101,7 @@ app.get("/api/signout", (req, res) => {
 	const auth = getAuth();
 	signOut(auth)
 		.then(() => {
-			res.redirect("/");
+			return res.redirect("/");
 		})
 		.catch((err) => {
 			console.error("signout failed. HOW? :(");
@@ -138,7 +135,7 @@ app.post(
 					photoURL: "https://shr4pnel.com/img/tapewinder_profilepicture.jpg"
 				})
 					.then(() => {
-						res.redirect("/success");
+						return res.redirect("/success");
 					})
 					.catch((err) => {
 						console.error("setdoc - err");
@@ -157,15 +154,15 @@ app.post("/api/login", (req, res) => {
 	const password = req.body.loginPassword;
 	const auth = getAuth();
 	setPersistence(auth, browserLocalPersistence)
-		.then(async () => {
-			await signInWithEmailAndPassword(auth, email, password)
-				.then(() => {
-					res.redirect("/");
-				})
+		.then(() => {
+			return signInWithEmailAndPassword(auth, email, password)
 				.catch((err) => {
 					console.error("api/login err");
 					console.error(err);
 				});
+		})
+		.then(() => {
+			return res.redirect("/");
 		})
 		.catch((err) => {
 			console.error("ERROR API/LOGIN");
