@@ -3,7 +3,7 @@ const nodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const autoprefixer = require("autoprefixer");
 
 module.exports = {
-	entry: ["./functions/js/landing.js", "./functions/js/entry.js"],
+	entry: ["./functions/js/landing.js", "./functions/js/entry.js", "./functions/scss/app.scss"],
 	mode: "production",
 	target: "web",
 	output: {

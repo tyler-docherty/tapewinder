@@ -102,3 +102,12 @@ body {
     border: 1px solid var(--bs-gray-800);
     color: white;
 }
+
+/* material overrides */
+
+.mdc-fab--bottom-right {
+    background-color: #333 !important;
+    position: absolute !important;
+    right: 2%;
+    top: 91%;
+}

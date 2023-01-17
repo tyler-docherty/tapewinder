@@ -10,6 +10,7 @@ import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc } 
 import { onRequest } from "firebase-functions/v1/https";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "firebase/auth";
 import { body, validationResult } from "express-validator";
+import cors from "cors";
 import express from "express";
 import path from "path";
 import helmet from "helmet";
@@ -28,6 +29,7 @@ app.use("/static/", express.static("static"));
 app.use(helmet({
 	crossOriginEmbedderPolicy: false
 }));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(helmet.permittedCrossDomainPolicies());
@@ -59,6 +61,8 @@ app.get("/", (req, res) => {
 				.catch((err) => {
 					console.error("error - getdoc index");
 					console.error(err);
+					res.redirect("/api/signout");
+					return;
 				});
 		} else {
 			const indexPath = path.resolve("./pug/landing.pug");
@@ -108,6 +112,8 @@ app.get("/api/signout", (req, res) => {
 			console.error(err);
 		});
 });
+
+
 
 app.post(
 	"/api/signup",

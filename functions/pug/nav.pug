@@ -16,11 +16,12 @@ mixin nav(loggedout)
                     +signupmodal("signUp", "Sign up modal", "Sign up")
                     +loginmodal("logIn", "Log in modal", "Log in")
                 else 
-                    a(class="nav-link text-light" href="/api/signout") Sign out
                     div.navbar-nav.rightalign#usernameInNav
                         div.nav-item.dropdown
                             a(class="nav-link dropdown-toggle white" href="#" data-bs-toggle="dropdown")
                                 img(src=photoURL alt="profile picture" class="profilepicture mx-1")
                                 span(class="open-sans white mx-1") #{username}
-                            div.dropdown-menu 
-                                a(href="https://google.com") hello!
+                            div.dropdown-menu.dropdown-menu-dark
+                                a(class="dropdown-item white open-sans" href="https://shr4pnel.com") My Account
+                                div.dropdown-divider 
+                                a(class="dropdown-item white open-sans" href="https://shr4pnel.com/api/signout") Sign Out
