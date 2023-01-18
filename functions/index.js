@@ -6,10 +6,11 @@
 import * as dotenv from "dotenv";
 dotenv.config({path: "./GCPCREDENTIALS.env"});
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc, Timestamp } from "firebase/firestore";
 import { onRequest } from "firebase-functions/v1/https";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "firebase/auth";
 import { body, validationResult } from "express-validator";
+import { getUserLocale } from "get-user-locale";
 import cors from "cors";
 import express from "express";
 import path from "path";
@@ -50,25 +51,24 @@ app.set("view engine", "pug");
 
 app.get("/", (req, res) => {
 	const auth = getAuth();
-	onAuthStateChanged(auth, (user) => {
-		if (user) {
-			getDoc(doc(db, "users", user.uid))
-				.then((document) => {
-					const userData = document.data();
-					const indexPath = path.resolve("./pug/signedin.pug");
-					res.render(indexPath, {"photoURL": userData.photoURL, "username": userData.displayName});
-				})
-				.catch((err) => {
-					console.error("error - getdoc index");
-					console.error(err);
-					res.redirect("/api/signout");
-					return;
-				});
-		} else {
-			const indexPath = path.resolve("./pug/landing.pug");
-			res.render(indexPath);
-		}
-	});
+	const user = auth.currentUser;
+	if (user) {
+		getDoc(doc(db, "users", user.uid))
+			.then((document) => {
+				const userData = document.data();
+				const indexPath = path.resolve("./pug/signedin.pug");
+				res.render(indexPath, {"photoURL": userData.photoURL, "username": userData.displayName});
+			})
+			.catch((err) => {
+				console.error("error - getdoc index");
+				console.error(err);
+				res.redirect("/api/signout");
+				return;
+			});
+	} else {
+		const indexPath = path.resolve("./pug/landing.pug");
+		res.render(indexPath);
+	}
 });
 
 app.get("/failure/password", (req, res) => {
@@ -88,7 +88,7 @@ app.get("/failure/registration/insecure", (req, res) => {
 
 app.get("/failure/registration/email", (req, res) => {
 	const indexPath = path.resolve("./pug/failure.pug");
-	res.render(indexPath, {error: "An error occured. An account using this email address already exists in our database, please register using a different email address."});
+	res.render(indexPath, {error: "An error occured. An account using this email address already exists, please register using a different email address."});
 });
 
 app.get("/success", (req, res) => {
@@ -96,8 +96,7 @@ app.get("/success", (req, res) => {
 	const auth = getAuth();
 	onAuthStateChanged(auth, (user) => {
 		const username = user ? user.displayName : undefined;
-		console.log(username);
-		res.render(indexPath, {username: username});
+		res.render(indexPath, {username: username, photoURL: "https://shr4pnel.com/img/tapewinder_profile_picture"});
 	});
 });
 
@@ -113,7 +112,26 @@ app.get("/api/signout", (req, res) => {
 		});
 });
 
-
+app.get("/user/:username", async (req, res) => {
+	const indexPath = path.resolve("./pug/account.pug");
+	const auth = getAuth();
+	if (auth.currentUser) {
+		await getUserDocument(auth.currentUser)
+			.then((doc) => {
+				const username = doc.data().displayName;
+				const photoURL = doc.data().photoURL;
+				const date = doc.data().accountCreated.toDate();
+				const accountCreated = date.toLocaleString(getUserLocale());
+				res.render(indexPath, {"username": username, "photoURL": photoURL, "accountCreated": accountCreated});
+			})
+			.catch((err) => {
+				console.error(err);
+				res.redirect("/failure");
+				return;
+			});
+	}
+	else res.redirect("/");
+});
 
 app.post(
 	"/api/signup",
@@ -138,10 +156,11 @@ app.post(
 				await setDoc(doc(db, "users", credential.user.uid), {
 					displayName: username,
 					email: req.body.signupEmail,
-					photoURL: "https://shr4pnel.com/img/tapewinder_profilepicture.jpg"
+					photoURL: "https://shr4pnel.com/img/tapewinder_profilepicture.jpg",
+					accountCreated: Timestamp.now()
 				})
 					.then(() => {
-						return res.redirect("/success");
+						return res.redirect("/");
 					})
 					.catch((err) => {
 						console.error("setdoc - err");
@@ -152,6 +171,8 @@ app.post(
 				console.error("ERROR - createUserWithEmailAndPassword():");
 				console.error(err.code);
 				console.error(err.message);
+				res.redirect("/failure/registration/email");
+				return;
 			});
 	});
 
@@ -199,5 +220,11 @@ app.post("/api/userHasMixtapes", (req, res) => {
 	}
 	res.send(JSON.stringify({userHasMixtapes: true, mixtapeCount: undefined}));
 });
+
+function getUserDocument(user) {
+	return new Promise(resolve => {
+		resolve(getDoc(doc(db, "users", user.uid)));
+	});
+}
 
 export const exportApp = onRequest(app);

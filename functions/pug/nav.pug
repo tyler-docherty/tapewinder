@@ -22,6 +22,7 @@ mixin nav(loggedout)
                                 img(src=photoURL alt="profile picture" class="profilepicture mx-1")
                                 span(class="open-sans white mx-1") #{username}
                             div.dropdown-menu.dropdown-menu-dark
-                                a(class="dropdown-item white open-sans" href="https://shr4pnel.com") My Account
+                                -var pathToAccount = `http://127.0.0.1:5000/user/${username}`
+                                a(class="dropdown-item white open-sans" href=pathToAccount) My Account
                                 div.dropdown-divider 
-                                a(class="dropdown-item white open-sans" href="https://shr4pnel.com/api/signout") Sign Out
+                                a(class="dropdown-item white open-sans" href="http://127.0.0.1:5000/api/signout") Sign Out

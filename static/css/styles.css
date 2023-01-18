@@ -39,6 +39,10 @@
     color: white;
 }
 
+.profilepictureradius {
+    border-radius: 20px;
+}
+
 .noyellowbackdrop {
     background-image: none !important;
 }
