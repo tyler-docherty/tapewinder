@@ -22,6 +22,7 @@
     "firebase": "^9.15.0",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.1.0",
+    "get-user-locale": "^2.1.2",
     "helmet": "^6.0.1",
     "material-components-web": "^14.0.0",
     "node": "^14.21.0",
