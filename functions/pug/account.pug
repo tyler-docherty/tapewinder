@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+    head
+        include head.pug 
+        +head("my account")
+    body 
+        include nav.pug 
+        +nav(false)
+        div.container.d-flex.justify-content-start.m-4.align-items-center
+            img(class="profilepictureradius" src=photoURL alt="profile picture" width=150)
+            p(class="open-sans white mx-3 display-3 bold") #{username}
+        div.container.mx-4 
+            p(class="open-sans white") Account created #{accountCreated}
+    script(src="/js/bundle.js")
